@@ -1,0 +1,154 @@
+﻿@using Microsoft.AspNetCore.Http
+@using RealStateApp.Core.Application.Dtos.Account
+@using RealStateApp.Core.Application.Helpers;
+@using RealStateApp.Core.Application.ViewModels.User;
+@using RealStateApp.Core.Application.ViewModels.Property
+@model List<PropertyViewModel>
+@inject IHttpContextAccessor httpContextAccessor
+@{
+    var User = httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+    var isAgent = User != null ? User.Roles.Any(r => r == "Agent") : false;
+}
+
+@{
+    ViewData["Title"] = "Propiedades";
+}
+
+<style>
+    .img-product-size {
+        height: 200px;
+        object-fit: cover;
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="row mb-3">
+        <div class="d-flex justify-content-between mb-4">
+            <h2 class="fw-bold">@(isAgent ? "Mis Propiedades" : "Propiedades Disponibles")</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        @if (Model == null || Model.Count == 0)
+        {
+            <div class="alert alert-info" role="alert">
+                <h4 class="text-center">No hay propiedades disponibles.</h4>
+            </div>
+        }
+        else
+        {
+            @foreach (var property in Model.OrderByDescending(p => p.Id))
+            {
+                if (isAgent)
+                {
+                    <div class="col-md-4 mb-4">
+                        <div class="card shadow-sm">
+                            <!-- Carrusel de imágenes -->
+                            <div id="carousel-@property.Id" class="carousel slide" data-bs-ride="carousel">
+                                <div class="carousel-inner">
+                                    @if (property.Images != null && property.Images.Any())
+                                    {
+                                        int index = 0;
+                                        foreach (var image in property.Images)
+                                        {
+                                            <div class="carousel-item @(index == 0 ? "active" : "")">
+                                                <img class="d-block w-100 img-product-size" src="@image" alt="Imagen de la propiedad">
+                                            </div>
+                                            index++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div class="carousel-item active">
+                                            <img class="d-block w-100 img-product-size" src="ruta-de-imagen-placeholder.jpg" alt="Sin imágenes disponibles">
+                                        </div>
+                                    }
+                                </div>
+                                <a class="carousel-control-prev" href="#carousel-@property.Id" role="button" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Anterior</span>
+                                </a>
+                                <a class="carousel-control-next" href="#carousel-@property.Id" role="button" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Siguiente</span>
+                                </a>
+                            </div>
+
+                            
+                            <div class="card-body">
+                                <h4 class="card-title text-dark">@property.PropertyType.Name</h4>
+                                <p class="card-text text-muted">@property.Description</p>
+                                <p><strong>Código:</strong> @property.UniqueCode</p>
+                                <p><strong>Tipo de Venta:</strong> @property.SaleType.Name</p>
+                                <p><strong>Precio:</strong> $@property.Price</p>
+                                <p><strong>Habitaciones:</strong> @property.RoomCount</p>
+                                <p><strong>Baños:</strong> @property.BathroomCount</p>
+                                <p><strong>Tamaño:</strong> @property.SizeInSquareMeters m²</p>
+
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <a asp-controller="Property" asp-action="Details" asp-route-id="@property.Id" class="btn btn-sm btn-outline-primary">Detalles</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    if (property.IsAvailable)
+                    {
+                        <div class="col-md-4 mb-4">
+                            <div class="card shadow-sm">
+                                
+                                <div id="carousel-@property.Id" class="carousel slide" data-bs-ride="carousel">
+                                    <div class="carousel-inner">
+                                        @if (property.Images != null && property.Images.Any())
+                                        {
+                                            int index = 0;
+                                            foreach (var image in property.Images)
+                                            {
+                                                <div class="carousel-item @(index == 0 ? "active" : "")">
+                                                    <img class="d-block w-100 img-product-size" src="@image" alt="Imagen de la propiedad">
+                                                </div>
+                                                index++;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <div class="carousel-item active">
+                                                <img class="d-block w-100 img-product-size" src="ruta-de-imagen-placeholder.jpg" alt="Sin imágenes disponibles">
+                                            </div>
+                                        }
+                                    </div>
+                                    <a class="carousel-control-prev" href="#carousel-@property.Id" role="button" data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Anterior</span>
+                                    </a>
+                                    <a class="carousel-control-next" href="#carousel-@property.Id" role="button" data-bs-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Siguiente</span>
+                                    </a>
+                                </div>
+
+                                
+                                <div class="card-body">
+                                    <h4 class="card-title text-dark">@property.PropertyType.Name</h4>
+                                    <p class="card-text text-muted">@property.Description</p>
+                                    <p><strong>Código:</strong> @property.UniqueCode</p>
+                                    <p><strong>Tipo de Venta:</strong> @property.SaleType.Name</p>
+                                    <p><strong>Precio:</strong> $@property.Price</p>
+                                    <p><strong>Habitaciones:</strong> @property.RoomCount</p>
+                                    <p><strong>Baños:</strong> @property.BathroomCount</p>
+                                    <p><strong>Tamaño:</strong> @property.SizeInSquareMeters m²</p>
+
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <a asp-controller="Property" asp-action="Details" asp-route-id="@property.Id" class="btn btn-sm btn-outline-primary">Detalles</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            }
+        }
+    </div>
+</div>

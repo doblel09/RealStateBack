@@ -1,0 +1,40 @@
+﻿@using RealStateApp.Core.Application.ViewModels.Improvement;
+@model SaveImprovementViewModel
+@{
+    bool editMode = Model.Id == 0 ? false : true;
+    ViewData["Title"] = "Añadir mejora";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-6 offset-3">
+            <div class="card">
+                <div class="card-header bg-dark text-light">
+                    <h4>@(editMode ? $"Editando mejora: {Model.Name}" : "Añadir nueva mejora")</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" asp-controller="Improvement" asp-action="@(editMode ? "Edit":"Create")">
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label">Mejora: </label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label">Descripcion: </label>
+                            <input asp-for="Description" class="form-control" />
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <input type="hidden" asp-for="Id" />
+
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                        <a asp-controller="Improvement" asp-action="Index" class="btn btn-warning">Atras</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

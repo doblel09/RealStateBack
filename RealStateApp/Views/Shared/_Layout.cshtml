@@ -1,0 +1,126 @@
+﻿@using Microsoft.AspNetCore.Http
+@using RealStateApp.Core.Application.Dtos.Account
+@using RealStateApp.Core.Application.Helpers;
+@using RealStateApp.Core.Application.ViewModels.User
+@inject IHttpContextAccessor httpContextAccessor
+@{
+    var User = httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+    var isAdmin = User != null ? User.Roles.Any(r => r == "Admin") : false;
+    var isAgent = User != null ? User.Roles.Any(r => r == "Agent") : false;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - UltraHouses</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/RealStateApp.styles.css" asp-append-version="true" />
+    <style>
+        
+        html, body {
+            height: 100%;
+        }
+
+        .content-wrapper {
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        footer {
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper">
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+                <div class="container-fluid">
+                    <a class="navbar-brand fw-bold text-light" asp-area="" asp-controller="@(User != null ? "Home" : "Home")" asp-action="Index">
+                        <i class="bi bi-house-door"></i> UltraHouses
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-auto">
+                            @if (User != null)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
+                                </li>
+                                @if (isAdmin)
+                                {
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle text-light" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Administrador
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li><a class="dropdown-item" asp-area="" asp-controller="Maintenance" asp-action="Index" asp-route-userRole="Agent">Agentes</a></li>
+                                            <li><a class="dropdown-item" asp-area="" asp-controller="Property" asp-action="PropertyTypes">Tipo de Propiedades</a></li>
+                                            <li><a class="dropdown-item" asp-area="" asp-controller="SaleType" asp-action="Index">Tipo de Ventas</a></li>
+                                            <li><a class="dropdown-item" asp-area="" asp-controller="Improvement" asp-action="Index">Mejoras</a></li>
+                                            <li><a class="dropdown-item" asp-area="" asp-controller="Maintenance" asp-action="Index" asp-route-userRole="Admin">Mant.Admins</a></li>
+                                            <li><a class="dropdown-item" asp-area="" asp-controller="Maintenance" asp-action="Index" asp-route-userRole="Developer">Mant.Desarrolladores</a></li>
+                                        </ul>
+                                    </li>
+                                }
+                                else if (isAgent)
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link text-light" asp-area="" asp-controller="Property" asp-action="Index">Mant.Propiedades</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-light" asp-area="" asp-controller="Maintenance" asp-route-id="@User.Id" asp-action="Profile">Perfil</a>
+                                    </li>
+                                }
+                                <li class="nav-item">
+                                    <a class="nav-link fw-bold text-light" asp-area="" asp-controller="User" asp-action="LogOut">
+                                        <i class="bi bi-box-arrow-right"></i> Cerrar Sesión (@User.UserName)
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link fw-bold text-light" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link fw-bold text-light" asp-area="" asp-controller="User" asp-action="Index">Iniciar Sesión</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link fw-bold text-light" asp-area="" asp-controller="Home" asp-action="Agents">Agentes</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link fw-bold text-light" asp-area="" asp-controller="User" asp-action="UserType">¡Regístrate!</a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <div class="container mt-4">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+        <footer class="bg-dark text-light py-3">
+            <div class="container text-center">
+                &copy; 2024 - UltraHouses. Todos los derechos reservados.
+            </div>
+        </footer>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,24 @@
+﻿@using RealStateApp.Core.Application.ViewModels.User;
+@model UpdateUserViewModel
+@{
+    ViewData["Title"] = "Eliminar agente";
+    var userRole = ViewBag.UserRole as string;
+}
+
+<div class="row">
+    <div class="col-6 offset-3">
+        <div class="card">
+            <div class="card-header bg-dark text-light">
+                <h4>¿Está seguro que desea eliminar a este agente: @Model.FirstName @Model.LastName?</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" asp-controller="Maintenance" asp-action="Delete">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <input type="hidden" name="userRole" value="@userRole" />
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                    <a asp-controller="Maintenance" asp-action="Index" class="btn btn-warning">Cancelar</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

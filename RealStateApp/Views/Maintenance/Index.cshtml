@@ -1,0 +1,117 @@
+﻿@using RealStateApp.Core.Application.ViewModels.User
+@model List<UserViewModel>
+@{
+    ViewData["Title"] = "Mantenimiento";
+    var userRole = ViewBag.UserRole as string;
+    bool agent = userRole == "Agent";
+    bool admin = userRole == "Admin";
+}
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between mb-4">
+        @if (admin)
+        {
+            <h2>Lista de Administradores</h2>
+            <a asp-controller="User" asp-action="Register" asp-route-userRole="Admin" class="btn btn-outline-success">Añadir administrador</a>
+        }
+        else if (agent)
+        {
+            <h2>Lista de Agentes</h2>
+            <a asp-controller="User" asp-action="Register" asp-route-userRole="Agent" class="btn btn-outline-success">Añadir agente</a>
+        }
+        else
+        {
+            <h2>Lista de Desarrolladores</h2>
+            <a asp-controller="User" asp-action="Register" asp-route-userRole="Developer" class="btn btn-outline-success">Añadir desarrollador</a>
+        }
+    </div>
+
+    @if (Model == null || Model.Count == 0)
+    {
+        @if (admin)
+        {
+            <div class="alert alert-info" role="alert">
+                No hay administradores disponibles.
+            </div>
+        }
+        else if (agent)
+        {
+            <div class="alert alert-info" role="alert">
+                No hay agentes disponibles.
+            </div>
+
+        }
+        else
+        {
+            <div class="alert alert-info" role="alert">
+                No hay desarrolladores disponibles.
+            </div>
+        }           
+    }
+
+    else
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Foto de Perfil</th>
+                    <th>Nombre Completo</th>
+                    <th>Nombre de Usuario</th>
+                    @if(!agent){<th>Cédula</th>}
+                    <th>Correo</th>
+                    @if(agent){<th>Num.Propiedades</th>}
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    <tr>
+                        <td>
+                            <img src="@user.ProfilePicture" alt="Foto de perfil" class="img-thumbnail" style="width: 50px; height: 50px;">
+                        </td>
+                        <td>@user.FirstName @user.LastName</td>
+                        <td>@user.Username</td>
+                        @if(!agent){<td>@user.Cedula</td>}
+                        <td>@user.Email</td>
+                        @if(agent){<td>@user.PropertiesQuantity</td>}
+                        <td>
+                            @if(agent)
+                            {
+                                <a asp-controller="Maintenance" asp-action="Delete" asp-route-id="@user.Id" asp-route-userRole="@userRole" class="btn btn-sm btn-outline-danger">Eliminar</a>
+                            }
+                            else
+                            {
+                                <a asp-controller="Maintenance" asp-action="Edit" asp-route-id="@user.Id" asp-route-userRole="@userRole" class="btn btn-sm btn-outline-info">Editar</a>
+                            }
+
+                            @if (user.IsActive)
+                            {
+                                <form asp-controller="Maintenance" asp-action="Deactivate" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="@user.Id" />
+                                    <input type="hidden" name="userRole" value="@userRole" />
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('¿Estás seguro de que deseas inactivar este usuario?');">Desactivar</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <form asp-controller="Maintenance" asp-action="Activate" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="@user.Id" />
+                                    <input type="hidden" name="userRole" value="@userRole" />
+                                    <button type="submit" class="btn btn-sm btn-outline-success" onclick="return confirm('¿Estás seguro de que deseas activar este usuario?');">Activar</button>
+                                </form>
+                            }
+
+
+                               
+                            
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="text-right mt-4">
+            <a asp-controller="Home" asp-action="Index" class="btn btn-warning">Atrás</a>
+        </div>
+    }
+</div>

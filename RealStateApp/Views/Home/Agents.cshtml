@@ -1,0 +1,76 @@
+﻿@using RealStateApp.Core.Application.ViewModels.User
+@model List<UserViewModel>
+
+@{
+    ViewData["Title"] = "Agentes";
+}
+
+<style>
+    .img-agent-size {
+        height: 100px;
+        width: 100px;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    .card-title {
+        font-size: 1.25rem;
+        font-weight: bold;
+    }
+</style>
+
+<div class="container mt-5">
+   
+    <div class="row mb-3">
+        <div class="d-flex justify-content-between mb-4">
+            <h2 class="fw-bold">Nuestros Agentes</h2>
+        </div>
+    </div>
+
+    
+    <div class="row mb-3">
+        <form asp-action="Agents" method="get" class="d-flex">
+            <input type="text"
+                   name="searchQuery"
+                   class="form-control me-2"
+                   placeholder="Buscar agente..."
+                   value="@ViewData["SearchQuery"]" />
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </form>
+    </div>
+
+    
+    <div class="row">
+        @if (Model == null || Model.Count == 0)
+        {
+            
+            <div class="alert alert-info" role="alert">
+                <h4 class="text-center">No hay agentes registrados.</h4>
+            </div>
+        }
+        else
+        {
+            
+            @foreach (var agent in Model.OrderBy(a => a.FirstName))
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow-sm">
+                        <div class="card-body text-center">
+                            <img class="img-agent-size mb-3"
+                                 src="@(agent.ProfilePicture ?? "https://via.placeholder.com/100")"
+                                 alt="Foto del agente" />
+                            <h4 class="card-title text-dark">@($"{agent.FirstName} {agent.LastName}")</h4>
+                            <p><strong>Email:</strong> @agent.Email</p>
+                            <p><strong>Teléfono:</strong> @agent.Phone</p>
+
+                            <a asp-action="Properties"
+                               asp-controller="Home"
+                               asp-route-agentId="@agent.Id"
+                               class="btn btn-primary">Ver Propiedades</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

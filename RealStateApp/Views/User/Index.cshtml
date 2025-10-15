@@ -1,0 +1,51 @@
+﻿@using RealStateApp.Core.Application.ViewModels.User
+@model LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="col-lg-4 col-md-6 col-sm-8">
+        <div class="card shadow-lg border-0 rounded">
+            <div class="card-header bg-primary text-white text-center">
+                <h4 class="fw-bold">Iniciar Sesión</h4>
+            </div>
+            <div class="card-body p-4">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                @if (Model.HasError)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        <span>@Model.Error</span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+                <form method="post" asp-controller="User" asp-action="Index">
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label fw-semibold">Correo Electrónico</label>
+                        <input type="email" class="form-control" asp-for="Email" placeholder="Ejemplo: usuario@correo.com">
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label fw-semibold">Contraseña</label>
+                        <input type="password" class="form-control" asp-for="Password" placeholder="Ingrese su contraseña">
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <a asp-controller="User" asp-action="ForgotPassword" class="text-decoration-none small text-primary">¿Olvidaste tu contraseña?</a>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary me-2">Atrás</a>
+                        <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer text-center bg-light">
+                <span class="small text-muted">
+                    ¿No tienes cuenta?
+                    <a asp-controller="User" asp-action="UserType" class="text-primary fw-semibold">¡Regístrate aquí!</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

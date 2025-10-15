@@ -1,0 +1,50 @@
+﻿@using RealStateApp.Core.Application.ViewModels.PropertyType
+@model List<PropertyTypeViewModel>
+@{
+    ViewData["Title"] = "Tipos de Propiedades";
+}
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between mb-4">
+        <h2>Lista de Tipos de Propiedades</h2>
+        <a asp-controller="Property" asp-action="Create" class="btn btn-outline-success">Añadir Tipo de Propiedad</a>
+    </div>
+
+    @if (Model == null || Model.Count == 0)
+    {
+        <div class="alert alert-info" role="alert">
+            No hay tipos de propiedades disponibles.
+        </div>
+    }
+    else
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Cantidad de Propiedades</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var propertyType in Model)
+                {
+                    <tr>
+                        <td>@propertyType.Name</td>
+                        <td>@propertyType.Description</td>
+                        <td>@propertyType.PropertiesQuantity</td>
+                        <td>
+                            <a asp-controller="Property" asp-action="Edit" asp-route-id="@propertyType.Id" class="btn btn-sm btn-outline-info">Editar</a>
+                            <a asp-controller="Property" asp-action="Delete" asp-route-id="@propertyType.Id" class="btn btn-sm btn-outline-danger">Eliminar</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="text-right mt-4">
+            <a asp-controller="Home" asp-action="Index" class="btn btn-warning">Atrás</a>
+        </div>
+    }
+</div>
+

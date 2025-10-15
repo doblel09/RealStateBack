@@ -1,0 +1,57 @@
+﻿@using RealStateApp.Core.Application.ViewModels.Property;
+@model PropertyViewModel
+
+
+@{
+    ViewData["Title"] = "Detalles";
+}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h2>Detalles de la propiedad</h2>
+            @if (Model.Images != null && Model.Images.Any())
+            {
+                <div id="propertyCarousel" class="carousel slide" data-ride="carousel">
+                    <ol class="carousel-indicators">
+                        @for (int i = 0; i < Model.Images.Count; i++)
+                        {
+                            <li data-target="#propertyCarousel" data-slide-to="@i" class="@(i == 0 ? "active" : "")"></li>
+                        }
+                    </ol>
+                    <div class="carousel-inner">
+                        @for (int i = 0; i < Model.Images.Count; i++)
+                        {
+                            <div class="carousel-item @(i == 0 ? "active" : "")">
+                                <img src="@Model.Images[i]" class="d-block w-100 img-fluid" alt="Imagen de la propiedad" style="height: 500px; object-fit: cover;">
+                            </div>
+                        }
+                    </div>
+                    <a class="carousel-control-prev" href="#propertyCarousel" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Anterior</span>
+                    </a>
+                    <a class="carousel-control-next" href="#propertyCarousel" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Siguiente</span>
+                    </a>
+                </div>
+            }
+            else
+            {
+                <p>No hay imágenes disponibles para esta propiedad.</p>
+            }
+            <div class="card-body">
+                
+                <p class="card-text">@Model.Description</p>
+                <p><strong>Código:</strong> @Model.UniqueCode</p>
+          
+                <p><strong>Precio:</strong> $@Model.Price</p>
+                <p><strong>Habitaciones:</strong> @Model.RoomCount</p>
+                <p><strong>Baños:</strong> @Model.BathroomCount</p>
+                <p><strong>Tamaño:</strong> @Model.SizeInSquareMeters m²</p>
+            </div>
+        </div>
+    </div>
+</div>

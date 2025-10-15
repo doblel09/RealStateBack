@@ -1,0 +1,22 @@
+﻿@using RealStateApp.Core.Application.ViewModels.SaleType;
+@model SaveSaleTypeViewModel
+@{
+    ViewData["Title"] = "Eliminar tipo de venta";
+}
+
+<div class="row">
+    <div class="col-6 offset-3">
+        <div class="card">
+            <div class="card-header bg-dark text-light">
+                <h4>¿Está seguro que desea eliminar este tipo de venta: @Model.Name y las propiedades asociadas?</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" asp-controller="SaleType" asp-action="Delete">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                    <a asp-controller="SaleType" asp-action="Index" class="btn btn-warning">Cancelar</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

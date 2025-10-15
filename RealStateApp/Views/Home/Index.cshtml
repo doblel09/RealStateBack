@@ -1,0 +1,105 @@
+﻿@using Microsoft.AspNetCore.Http
+@using RealStateApp.Core.Application.Dtos.Account
+@using RealStateApp.Core.Application.Helpers;
+@using RealStateApp.Core.Application.ViewModels.Home;
+@using RealStateApp.Core.Application.ViewModels.User;
+@inject IHttpContextAccessor httpContextAccessor
+@{
+    var User = httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+    var isAdmin = User != null ? User.Roles.Any(r => r == "Admin") : false;
+}
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+@if (User != null)
+{
+    @if (isAdmin)
+    {
+        @model StatisticsViewModel
+
+        <div class="container mt-5">
+            <h2 class="text-center fw-bold mb-4">Estadísticas de Usuarios y Propiedades</h2>
+            <div class="row g-4">
+                <!-- Agentes -->
+                <div class="col-md-3">
+                    <div class="card shadow border-0 rounded-3">
+                        <div class="card-header bg-primary text-white text-center fw-bold">
+                            <i class="bi bi-person-badge"></i> Agentes
+                        </div>
+                        <div class="card-body text-center">
+                            <p class="mb-1">
+                                <span class="badge bg-success">Activos: @Model.ActiveAgents</span>
+                            </p>
+                            <p>
+                                <span class="badge bg-danger">Inactivos: @Model.InactiveAgents</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Clientes -->
+                <div class="col-md-3">
+                    <div class="card shadow border-0 rounded-3">
+                        <div class="card-header bg-success text-white text-center fw-bold">
+                            <i class="bi bi-people"></i> Clientes
+                        </div>
+                        <div class="card-body text-center">
+                            <p class="mb-1">
+                                <span class="badge bg-success">Activos: @Model.ActiveClients</span>
+                            </p>
+                            <p>
+                                <span class="badge bg-danger">Inactivos: @Model.InactiveClients</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Desarrolladores -->
+                <div class="col-md-3">
+                    <div class="card shadow border-0 rounded-3">
+                        <div class="card-header bg-warning text-black text-center fw-bold">
+                            <i class="bi bi-building"></i> Desarrolladores
+                        </div>
+                        <div class="card-body text-center">
+                            <p class="mb-1">
+                                <span class="badge bg-success">Activos: @Model.ActiveDevelopers</span>
+                            </p>
+                            <p>
+                                <span class="badge bg-danger">Inactivos: @Model.InactiveDevelopers</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Propiedades -->
+                <div class="col-md-3">
+                    <div class="card shadow border-0 rounded-3">
+                        <div class="card-header bg-info text-white text-center fw-bold">
+                            <i class="bi bi-house"></i> Propiedades
+                        </div>
+                        <div class="card-body text-center">
+                            <p class="mb-1">
+                                <span class="badge bg-success">Disponibles: @Model.AvailableProperty</span>
+                            </p>
+                            <p>
+                                <span class="badge bg-secondary">Vendidas: @Model.NotAvailableProperty</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="text-center mt-5">
+        <h1 class="display-4 fw-bold">Bienvenido a UltraHouses</h1>
+        <p class="lead">Administra propiedades, agentes y clientes de manera eficiente.</p>
+        <p>
+            Aprende más sobre <a href="https://learn.microsoft.com/aspnet/core" class="text-decoration-none text-primary">ASP.NET Core</a>.
+        </p>
+    </div>
+}
