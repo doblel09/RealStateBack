@@ -1,0 +1,22 @@
+﻿@using RealStateApp.Core.Application.ViewModels.Property;
+@model SavePropertyViewModel
+@{
+    ViewData["Title"] = "Eliminar propiedad";
+}
+
+<div class="row">
+    <div class="col-6 offset-3">
+        <div class="card">
+            <div class="card-header bg-dark text-light">
+                <h4>¿Está seguro que desea eliminar esta propiedad: @Model.UniqueCode?</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" asp-controller="Property" asp-action="DeleteProperty">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                    <a asp-controller="Property" asp-action="Index" class="btn btn-warning">Cancelar</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,73 @@
+﻿@using RealStateApp.Core.Application.ViewModels.Property
+@model List<PropertyViewModel>
+
+@{
+    ViewData["Title"] = $"Propiedades de {ViewBag.AgentName}";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Propiedades de @ViewBag.AgentName</h2>
+
+    @if (Model == null || Model.Count == 0)
+    {
+        <div class="alert alert-info" role="alert">
+            <h4 class="text-center">Este agente no tiene propiedades registradas.</h4>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var property in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow-sm">
+                        <!-- Carousel de imágenes -->
+                        <div id="carousel-@property.Id" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                @if (property.Images != null && property.Images.Any())
+                                {
+                                    int index = 0;
+                                    foreach (var image in property.Images)
+                                    {
+                                        <div class="carousel-item @(index == 0 ? "active" : "")">
+                                            <img class="d-block w-100 img-product-size" src="@image" alt="Imagen de la propiedad">
+                                        </div>
+                                        index++;
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="carousel-item active">
+                                        <img class="d-block w-100 img-product-size" src="https://via.placeholder.com/150" alt="Sin imágenes disponibles">
+                                    </div>
+                                }
+                            </div>
+                            <a class="carousel-control-prev" href="#carousel-@property.Id" role="button" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Anterior</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carousel-@property.Id" role="button" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Siguiente</span>
+                            </a>
+                        </div>
+
+                        <!-- Detalles de la propiedad -->
+                        <div class="card-body">
+                            <h5 class="card-title text-dark">@property.PropertyType.Name</h5>
+                            <p class="card-text text-muted">@property.Description</p>
+                            <p><strong>Código:</strong> @property.UniqueCode</p>
+                            <p><strong>Precio:</strong> $@property.Price</p>
+                            <p><strong>Tamaño:</strong> @property.SizeInSquareMeters m²</p>
+                            <a asp-action="Details" asp-controller="Property" asp-route-id="@property.Id" class="btn btn-primary btn-sm">Detalles</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<div class="mt-4 text-center">
+    <a asp-controller="Home" asp-action="Agents" class="btn btn-secondary">Atrás</a>
+</div>

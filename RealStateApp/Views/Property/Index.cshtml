@@ -1,0 +1,57 @@
+﻿@using RealStateApp.Core.Application.ViewModels.Property
+@model List<PropertyViewModel>
+@{
+    ViewData["Title"] = "Propiedades";
+}
+
+<div class="container mt-5">
+    <div class="row mb-3">
+        <div class="d-flex justify-content-between mb-4">
+            <h2>Mis Propiedades</h2>
+            <a asp-controller="Property" asp-action="AddProperty" class="btn btn-outline-success">Añadir Propiedad</a>
+        </div>
+    </div>
+
+    <div class="row">
+        @if (Model == null || Model.Count == 0)
+        {
+            <div class="alert alert-info" role="alert">
+                <h4>No hay propiedades disponibles.</h4>
+            </div>
+        }
+        else
+        {
+            @foreach (var property in Model.OrderByDescending(p => p.Id)) 
+            {
+                if (property.IsAvailable)
+                {
+                    <div class="col-4">
+                        <div class="card shadow-sm">
+                            <img class="bd-placeholder-img card-img-top img-product-size" src="@property.Images.FirstOrDefault()" alt="Imagen de la propiedad" />
+
+                            <div class="card-body">
+                                <h4 class="card-title">@property.PropertyType.Name</h4>
+                                <p class="card-text">@property.Description</p>
+                                <p><strong>Código:</strong> @property.UniqueCode</p>
+                                <p><strong>Tipo de Venta:</strong> @property.SaleType.Name</p>
+                                <p><strong>Precio:</strong> $@property.Price</p>
+                                <p><strong>Habitaciones:</strong> @property.RoomCount</p>
+                                <p><strong>Baños:</strong> @property.BathroomCount</p>
+                                <p><strong>Tamaño:</strong> @property.SizeInSquareMeters m²</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group">
+                                        <a asp-controller="Property" asp-action="EditProperty" asp-route-id="@property.Id" class="btn btn-sm btn-outline-info">Editar</a>
+                                        <a asp-controller="Property" asp-action="DeleteProperty" asp-route-id="@property.Id" class="btn btn-sm btn-outline-danger">Borrar</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        }
+        <div class="text-right mt-4">
+            <a asp-controller="Home" asp-action="Index" class="btn btn-warning">Atrás</a>
+        </div>
+    </div>
+</div>

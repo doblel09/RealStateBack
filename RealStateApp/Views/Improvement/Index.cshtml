@@ -1,0 +1,48 @@
+﻿@using RealStateApp.Core.Application.ViewModels.Improvement
+@model List<ImprovementViewModel>
+@{
+    ViewData["Title"] = "Tipos de Mejoras";
+}
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between mb-4">
+        <h2>Lista de Tipos de Mejoras</h2>
+        <a asp-controller="Improvement" asp-action="Create" class="btn btn-outline-success">Añadir Mejora</a>
+    </div>
+
+    @if (Model == null || Model.Count == 0)
+    {
+        <div class="alert alert-info" role="alert">
+            No hay mejoras disponibles.
+        </div>
+    }
+    else
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var improvement in Model)
+                {
+                    <tr>
+                        <td>@improvement.Name</td>
+                        <td>@improvement.Description</td>
+                        <td>
+                            <a asp-controller="Improvement" asp-action="Edit" asp-route-id="@improvement.Id" class="btn btn-sm btn-outline-info">Editar</a>
+                            <a asp-controller="Improvement" asp-action="Delete" asp-route-id="@improvement.Id" class="btn btn-sm btn-outline-danger">Eliminar</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="text-right mt-4">
+            <a asp-controller="Home" asp-action="Index" class="btn btn-warning">Atrás</a>
+        </div>
+    }
+</div>
+

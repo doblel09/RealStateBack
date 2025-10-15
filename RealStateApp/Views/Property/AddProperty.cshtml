@@ -1,0 +1,99 @@
+﻿@using RealStateApp.Core.Application.ViewModels.Property;
+@model SavePropertyViewModel
+@{
+    ViewData["Title"] = "Añadir propiedad";
+    bool editMode = (Model.Id == 0 ? false : true);
+}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-6 offset-3">
+            <div class="card">
+                <div class="card-header bg-dark text-light">
+                    <h4>@(editMode ? $"Editar informacion de la propiedad: {Model.UniqueCode}" : "Añadir nueva propiedad")</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" asp-controller="Property" asp-action="@(editMode ? "EditProperty" : "AddProperty")" enctype="multipart/form-data">
+                        <div asp-validation-summary="All" class="text-danger"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label">Descripcion: </label>
+                            <input asp-for="Description" class="form-control" />
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="SizeInSquareMeters" class="form-label">Tamoño en metros: </label>
+                            <input type="number" step="any" asp-for="SizeInSquareMeters" class="form-control" />
+                            <span asp-validation-for="SizeInSquareMeters" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="RoomCount" class="form-label">Numero de habitaciones: </label>
+                            <input type="number" step="any" asp-for="RoomCount" class="form-control" />
+                            <span asp-validation-for="RoomCount" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Price" class="form-label">Precio: </label>
+                            <input type="number" step="any" asp-for="Price" class="form-control" />
+                            <span asp-validation-for="Price" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="BathroomCount" class="form-label">Numero de baños: </label>
+                            <input asp-for="BathroomCount" class="form-control" />
+                            <span asp-validation-for="BathroomCount" class="text-danger"></span>
+                        </div>
+             
+                        <div class="mb-3">
+                            <label asp-for="Files" class="form-label">Imagenes: </label>
+                            <input asp-for="Files" class="form-control" type="file" name="Files" multiple />
+                            <span asp-validation-for="Files" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="PropertyTypeId" class="form-label">Tipo de propiedad: </label>
+                            <select asp-for="PropertyTypeId" asp-items="@(new SelectList(Model.PropertyTypes,"Id","Name"))" class="form-select">
+                                <option value="">Seleccione una opcion</option>
+
+                            </select>
+                            <span asp-validation-for="PropertyTypeId" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="SaleTypeId" class="form-label">Tipo de venta: </label>
+                            <select asp-for="SaleTypeId" asp-items="@(new SelectList(Model.SaleTypes,"Id","Name"))" class="form-select">
+                                <option value="">Seleccione una opcion</option>
+
+                            </select>
+                            <span asp-validation-for="SaleTypeId" class="text-danger"></span>
+                        </div>
+
+
+                        @if (editMode)
+                        {
+                            <div class="mb-3">
+                                <label asp-for="Improvements" class="form-label">Mejoras: </label>
+                                <select asp-for="Improvements" asp-items="@(new SelectList(Model.Improvements, "Id", "Name"))" class="form-select" multiple>
+                                    <option value="">Seleccione una opción</option>
+                                </select>
+                                <span asp-validation-for="Improvements" class="text-danger"></span>
+                            </div>
+                        }
+
+                        <input type="hidden" asp-for="IsAvailable" vaue="@Model.IsAvailable" />
+                       <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="AgentId" />
+                        <input type="hidden" asp-for="UniqueCode" />
+
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                        <a asp-controller="Property" asp-action="Index" class="btn btn-warning">Atras</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

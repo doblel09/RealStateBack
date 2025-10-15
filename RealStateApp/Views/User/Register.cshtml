@@ -1,0 +1,116 @@
+﻿@using RealStateApp.Core.Application.ViewModels.User;
+@model SaveUserViewModel
+@{
+    ViewData["Title"] = "Registro";
+    var userRole = ViewBag.UserRole as string;
+    bool customer = userRole == "Customer" || userRole == "Agent";
+}
+
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="col-lg-6 col-md-8 col-sm-10">
+        <div class="card shadow-lg border-0 rounded">
+            <div class="card-header bg-primary text-white text-center">
+                <h4 class="fw-bold">
+                    @(customer ? "Crear una cuenta" : $"Registrar nuevo usuario: {userRole}")
+                </h4>
+            </div>
+            <div class="card-body p-4">
+                @if (Model.HasError)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        <span>@Model.Error</span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+                <form method="post" asp-controller="User" asp-action="Register" enctype="multipart/form-data">
+                    <input type="hidden" asp-for="UserRole" value="@userRole" />
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="FirstName" class="form-label fw-semibold">Nombre:</label>
+                            <input asp-for="FirstName" class="form-control" />
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="LastName" class="form-label fw-semibold">Apellido:</label>
+                            <input asp-for="LastName" class="form-control" />
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Cedula" class="form-label fw-semibold">Cédula:</label>
+                        <input asp-for="Cedula" class="form-control" />
+                        <span asp-validation-for="Cedula" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="File" class="form-label fw-semibold">Foto de perfil:</label>
+                        <input asp-for="File" class="form-control" type="file" />
+                        <span asp-validation-for="File" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Username" class="form-label fw-semibold">Nombre de usuario:</label>
+                        <input asp-for="Username" class="form-control" />
+                        <span asp-validation-for="Username" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Password" class="form-label fw-semibold">Contraseña:</label>
+                            <input asp-for="Password" class="form-control" type="password" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="ConfirmPassword" class="form-label fw-semibold">Confirmar contraseña:</label>
+                            <input asp-for="ConfirmPassword" class="form-control" type="password" />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    @if (customer)
+                    {
+                        <div class="mb-3">
+                            <label asp-for="UserRole" class="form-label fw-semibold">Tipo de usuario:</label>
+                            <select asp-for="UserRole" class="form-select">
+                                <option value="">Seleccione una opción</option>
+                                <option value="Customer">Cliente</option>
+                                <option value="Agent">Agente</option>
+                            </select>
+                            <span asp-validation-for="UserRole" class="text-danger"></span>
+                        </div>
+                    }
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Phone" class="form-label fw-semibold">Teléfono:</label>
+                            <input asp-for="Phone" class="form-control" />
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Email" class="form-label fw-semibold">Correo:</label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a asp-controller="User" asp-action="Index" class="btn btn-secondary">Volver atrás</a>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+
+                    @if (customer)
+                    {
+                        <a asp-controller="User" asp-action="Index" class="btn btn-warning">Volver atras</a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Maintenance" asp-action="Index" asp-route-userRole="@userRole" class="btn btn-warning">Volver atras</a>
+                    }
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
